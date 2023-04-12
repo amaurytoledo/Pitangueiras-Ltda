@@ -1,21 +1,23 @@
 <?php
+session_start();
 $login = $_POST['login'];
-$entrar = $_POST['entrar'];
-$senha = md5($_POST['senha']);
-$connect = mysqli_connect('nome_do_servidor','nome_de_usuario','senha');
-$db = mysqli_select_db('nome_do_banco_de_dados');
-  if (isset($entrar)) {
+$senha = MD5($_POST['senha']);
 
-    $verifica = mysqli_query("SELECT * FROM usuarios WHERE login =
-    '$login' AND senha = '$senha'") or die("erro ao selecionar");
-      if (mysqli_num_rows($verifica)<=0){
-        echo"<script language='javascript' type='text/javascript'>
-        alert('Login e/ou senha incorretos');window.location
-        .href='login.html';</script>";
-        die();
-      }else{
-        setcookie("login",$login);
-        header("Location:index.php");
-      }
-  }
+$connect = mysqli_connect('localhost','root','');
+$db = mysqli_select_db($connect, 'db_pitangueira');
+$query_select = "SELECT * FROM tb_func WHERE login = '$login' AND senha = '$senha'";
+$select = mysqli_query($connect, $query_select);
+
+if(mysqli_num_rows($select) == 1){
+    $array = mysqli_fetch_array($select);
+    $_SESSION['login'] = $login;
+    if($array['tipo'] == 'gestor'){
+        header('Location: dashboard_gestor.php');
+    }else{
+        header('Location: dashboard_tecnico.php');
+    }
+}else{
+    unset($_SESSION['login']);
+    header('Location: login.html');
+}
 ?>
