@@ -17,4 +17,25 @@ else {
 	if ($logarray == $chamado) {
 		echo "<script language='javascript' type='text/javascript'>
 		alert('Esse chamado já existe');window.location.href='index.html';</script>";
-		die();
+	} else {
+		if ($descricao == "" || $descricao == null) {
+			echo "<script language='javascript' type='text/javascript'>
+			alert('O campo descrição deve ser preenchido');window.location.href='index.html';</script>";
+		} else {
+			$query = "INSERT INTO tb_atividade (chamado,descricao) VALUES ('$chamado','$descricao')";
+			$insert = mysqli_query($connect, $query);
+
+			if ($insert) {
+				echo "<script language='javascript' type='text/javascript'>
+				alert('Chamado cadastrado com sucesso!');window.location.href='index.html'</script>";
+			} else {
+				echo "<script language='javascript' type='text/javascript'>
+				alert('Não foi possível cadastrar esse chamado');window.location.href='index.html'</script>";
+			}
+		}
+	}
+	die();
+}
+
+mysqli_close($connect);
+?>
